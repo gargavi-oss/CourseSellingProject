@@ -7,8 +7,10 @@ const app = express()
 
 app.use(express.json())
 app.use(cors({
-    origin: "*"
+    origin: "*",
+    credentials: true
 }))
+
 app.use(express.urlencoded({extended: true,limit: "16kb"}))
 app.use(express.static("public"))
 
