@@ -1,6 +1,7 @@
 import { User } from "../models/users.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export async function signUp(req,res){
     try {
@@ -13,17 +14,35 @@ export async function signUp(req,res){
     }
     const foundUser = await User.findOne({email})
     
+    
     if(foundUser){
       return res.status(409).send({
             message: "User Already exists",
-            success: true
+            success: false
         })
     }
     else {
+      const avatarLocalPath = req.files?.avatar[0].path;
+   
+    if (!avatarLocalPath) {
+      return res.status(404).send({
+        message: " Avatar image is required"
+      })  
+    }
+    const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+    if (!avatar) {
+      return res.status(500).send({
+        message: "Failed to upload avatar to Cloudinary",
+        success: false
+      });
+    }
+    
         const hashedPassword = await bcrypt.hash(password, 10);
       await User.create({
             name: name,
             email: email,
+            avatar: avatar.url,
             password: hashedPassword,
             role: role
         })

@@ -21,12 +21,6 @@ const userSchema = new Schema({
         enum: ['user','admin'],
         default: 'user'
     },
-    allCourses: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Course"
-        }
-    ],
     enrolledCourses: [
         {
             type: mongoose.Schema.Types.ObjectId,

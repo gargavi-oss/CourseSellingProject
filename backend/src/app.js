@@ -9,6 +9,8 @@ app.use(express.json())
 app.use(cors({
     origin: "*"
 }))
+app.use(express.urlencoded({extended: true,limit: "16kb"}))
+app.use(express.static("public"))
 
 app.get("/",(req,res)=>{
     res.send("hello")

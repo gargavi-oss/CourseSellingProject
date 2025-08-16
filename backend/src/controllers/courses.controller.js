@@ -1,5 +1,7 @@
 import { Course } from "../models/courses.model.js";
 import { User } from "../models/users.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+
 
 export async function getAllCourses(req, res) {
     try {
@@ -68,8 +70,22 @@ export async function createCourse(req, res) {
                 success: false
             });
         }
+        const courseFilePath = req.files?.courseImage[0].path;
+        if (!courseFilePath) {
+            return res.status(404).send({
+              message: " Course image is required"
+            })  
+          }
+          const courseImage = await uploadOnCloudinary(avatarLocalPath);
 
-        const course = await Course.create({ title, description, price, createdBy: req.user.id, author: author });
+    if (!courseImage) {
+      return res.status(500).send({
+        message: "Failed to upload Course Image to Cloudinary",
+        success: false
+      });
+    }
+    
+        const course = await Course.create({ title, description, price, createdBy: req.user.id, author: author , imageOfProduct: courseImage.url});
         res.status(201).send({
             message: "Course created successfully",
             course,
