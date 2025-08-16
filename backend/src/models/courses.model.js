@@ -9,7 +9,7 @@ const courseSchema = new Schema({
         type: String,
         required: true
     },
-    imageOfProduct: {
+    courseImage: {
         type: String
     },
     price: {

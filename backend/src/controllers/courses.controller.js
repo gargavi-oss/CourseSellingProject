@@ -76,7 +76,7 @@ export async function createCourse(req, res) {
               message: " Course image is required"
             })  
           }
-          const courseImage = await uploadOnCloudinary(avatarLocalPath);
+          const courseImage = await uploadOnCloudinary(courseFilePath);
 
     if (!courseImage) {
       return res.status(500).send({
@@ -85,7 +85,7 @@ export async function createCourse(req, res) {
       });
     }
     
-        const course = await Course.create({ title, description, price, createdBy: req.user.id, author: author , imageOfProduct: courseImage.url});
+        const course = await Course.create({ title, description, price, createdBy: req.user.id, author: author , courseImage: courseImage.url});
         res.status(201).send({
             message: "Course created successfully",
             course,
@@ -195,10 +195,8 @@ export async function addCourse(req,res){
             });
           }
       
-    
-    
-
-        user.enrolledCourses.push(course);
+          user.enrolledCourses.push(course._id);
+          await user.save();          
         await user.save()
         return res.send({
             message: "Course added",
