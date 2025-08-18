@@ -2,29 +2,32 @@ import React from "react"
 import { Button } from "@/components/ui/button"
 import { UserCheck, Award, Play } from "lucide-react"
 import { motion } from "framer-motion"
+import { NavLink } from "react-router"
+import StudentImage from "../assets/student.png"
+import { HashLink } from "react-router-hash-link/dist/react-router-hash-link.cjs.production"
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-sky-50 via-indigo-50 to-violet-100 text-gray-900 overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-to-r from-sky-50 via-indigo-100 to-purple-200 text-gray-900 overflow-hidden">
      
       <div className="absolute w-96 h-96 bg-violet-200/40 rounded-full blur-3xl top-[-60px] left-[-100px]" />
-      <div className="absolute w-96 h-96 bg-pink-200/40 rounded-full blur-3xl bottom-[-120px] right-[-150px]" />
+      <div className="absolute w-96 h-96 bg-pink-200/40 rounded-full blur-3xl bottom-[-60px] right-[-150px]" />
 
       <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-12 py-5  
         backdrop-blur-lg bg-white/70 border-b border-gray-200 shadow-md">
         <h1 className="text-2xl font-bold tracking-wide text-indigo-600">Coursify</h1>
         <nav className="space-x-10 hidden md:flex">
-          <a href="#" className="hover:text-indigo-600 font-medium">Home</a>
-          <a href="#" className="hover:text-indigo-600 font-medium">Courses</a>
-          <a href="#" className="hover:text-indigo-600 font-medium">About Us</a>
+          <HashLink smooth to="#home" className="hover:text-indigo-600 font-medium">Home</HashLink>
+          <HashLink to="#courses" smooth className="hover:text-indigo-600 font-medium">Courses</HashLink>
+          <HashLink to="#about" smooth className="hover:text-indigo-600 font-medium">About Us</HashLink>
         </nav>
         <div className="space-x-4">
-          <Button variant="secondary" className="bg-indigo-50 text-indigo-600 rounded-full px-6 shadow-sm hover:bg-indigo-100">
+          <NavLink to="/signin" variant="secondary" className="bg-indigo-50 text-indigo-600 rounded-full px-6 py-2 shadow-sm hover:bg-indigo-100">
             Login
-          </Button>
-          <Button className="bg-indigo-600 text-white rounded-full px-6 shadow-md hover:bg-indigo-700">
+          </NavLink>
+          <NavLink to="/signup" className="bg-indigo-600 text-white rounded-full px-6 py-2 shadow-md hover:bg-indigo-700">
             Sign Up
-          </Button>
+          </NavLink>
         </div>
       </header>
 
@@ -42,9 +45,9 @@ export default function Home() {
           </p>
 
           <div className="flex space-x-4">
-            <Button className="bg-indigo-600 text-white rounded-full px-6 shadow-md hover:bg-indigo-700">
+            <NavLink to="/signup" className="bg-indigo-600 text-white py-1.5 rounded-full px-6 shadow-md hover:bg-indigo-700">
               Join for Free
-            </Button>
+            </NavLink>
             <Button variant="outline" className="flex items-center gap-2 rounded-full border-indigo-300 text-indigo-600 px-6 hover:bg-indigo-50 transition">
               <Play size={18} /> Watch Demo
             </Button>
@@ -57,7 +60,7 @@ export default function Home() {
             >
               <UserCheck className="w-8 h-8 text-indigo-600" />
               <div>
-                <p className="text-xl font-bold">250k+</p>
+                <p className="text-xl font-bold">100+</p>
                 <span className="text-sm text-gray-600">Assisted Students</span>
               </div>
             </motion.div>
@@ -77,7 +80,7 @@ export default function Home() {
 
         <div className="flex-1 mt-12 md:mt-0 flex justify-center relative">
           <motion.img
-            src="https://sdmntprwestus.oaiusercontent.com/files/00000000-94bc-6230-ba7a-5ad46a5ad542/raw?se=2025-08-16T10%3A03%3A42Z&sp=r&sv=2024-08-04&sr=b&scid=fe68495c-7545-5a32-8c96-bfb9967af0b9&skoid=a3412ad4-1a13-47ce-91a5-c07730964f35&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-08-16T02%3A01%3A31Z&ske=2025-08-17T02%3A01%3A31Z&sks=b&skv=2024-08-04&sig=HrMVxDNhGjAYYZQ0WYNfNQHpSpWe7ER0LN5xFB0f2tE%3D"
+           src={StudentImage}
             alt="Student illustration"
             className="w-[320px] md:w-[450px] drop-shadow-2xl"
             initial={{ y: 50, opacity: 0 }}

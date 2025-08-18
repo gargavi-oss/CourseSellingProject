@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export async function signUp(req,res){
     try {
-        const {email,name,password,role} = req.body;
+        const {email,name,password} = req.body;
     if(email=='' || name ==''|| password== ''){
         return res.send({
             message: "User Details required",
@@ -44,7 +44,6 @@ export async function signUp(req,res){
             email: email,
             avatar: avatar.url,
             password: hashedPassword,
-            role: role
         })
 if(role=="admin"){
     res.send({
@@ -89,18 +88,25 @@ export async function signIn(req,res){
         process.env.JWT_SECRET,
         { expiresIn: "7d" }
       );
-  
+      res.cookie("csrftoken", token, {
+        httpOnly: true,
+        secure: true,             
+        sameSite: "None",       
+      });
+      
       if (foundUser.role === "admin") {
         return res.send({
           token,
           message: "Admin signed in",
           name: foundUser.name,
+          role: foundUser.role,
           success: true
         });
       }
     return res.send({
         token,
         message: "User signed in",
+        role: foundUser.role,
         name: foundUser.name,
         success: true
     })
@@ -117,14 +123,20 @@ export async function user(req, res) {
     try {
       const signedInUser = req.user; 
       const user = await User.findById(signedInUser.id);
+
+const totalUsers = await User.find({ role: { $ne: "admin" } });
+const totalAdmin = await User.find({role: {$ne: "user"}})
+
   
       if (user) {
         return res.send({
-          user: {
+
             name: user.name,
             email: user.email,
-            role: user.role
-          }
+            role: user.role,
+            avatar: user.avatar,
+            totalUsers: totalUsers.length,
+            totalAdmin: totalAdmin.length
         });
       }
   

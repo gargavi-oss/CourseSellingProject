@@ -7,16 +7,14 @@ const app = express()
 
 app.use(express.json())
 app.use(cors({
-    origin: "*",
-    credentials: true
-}))
+    origin: "http://localhost:5173", 
+    credentials: true,    
+  }));  
 
 app.use(express.urlencoded({extended: true,limit: "16kb"}))
 app.use(express.static("public"))
 
-app.get("/",(req,res)=>{
-    res.send("hello")
-})
+
 app.use("/api/v1",userRoutes);
 app.use("/api/v1",courseRoutes)
 

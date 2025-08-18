@@ -1,20 +1,12 @@
 import { Course } from "../models/courses.model.js";
 import { User } from "../models/users.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import xaxios from "axios"
 
 
 export async function getAllCourses(req, res) {
     try {
-        const signedInUser = req.user;
-        const user = await User.findById(signedInUser.id);
-
-        if (!user) {
-            return res.status(403).json({
-                message: "User doesn't exist",
-                success: false
-            });
-        }
-
+     
         const courses = await Course.find();
 
         return res.status(200).json({
@@ -40,8 +32,12 @@ export async function getCoursesByUser(req,res){
             success: false
           });
         }
+        const courses = await Course.find({
+            _id: { $in: user.enrolledCourses }
+          });
         return res.send({
-            enrolledCourses: user.enrolledCourses,
+            success: true,
+            enrolledCourses: courses,
             totalCourses: user.enrolledCourses.length >0? user.enrolledCourses.length : 0
         })
         
@@ -143,6 +139,37 @@ export async function deleteCourse(req,res){
     try {
         const {id} = req.params;
         const signedInUser = req.user;
+        const user = await User.findById(signedInUser.id);
+        
+        if (!user.enrolledCourses.includes(id)) {
+            return res.status(404).json({
+              message: "Course not found in enrolled list",
+              success: false,
+            });
+          }
+          user.enrolledCourses = user.enrolledCourses.filter(
+            (course) => course._id.toString() !== id
+          );
+      
+          await user.save();
+      
+          return res.send({
+            message: "Course removed from enrolled list",
+            success: true,
+          });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+}
+export async function deleteCourseByAdmin(req,res){
+ 
+    try {
+        const {id} = req.params;
+        const signedInUser = req.user;
         if(signedInUser.role!== "admin"){
             return res.status(403).json({
                 message: "You dont have access to delete the course only admin can do",
@@ -195,8 +222,7 @@ export async function addCourse(req,res){
             });
           }
       
-          user.enrolledCourses.push(course._id);
-          await user.save();          
+          user.enrolledCourses.push(course);
         await user.save()
         return res.send({
             message: "Course added",
@@ -205,6 +231,40 @@ export async function addCourse(req,res){
         })
 
         
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+}
+
+
+export async function getCourseInfo(req,res){
+    try {
+        const signedInUser = req.user;
+        const user = await User.findById(signedInUser.id);
+        if (!user) {
+          return res.status(404).send({
+            message: "User not found",
+            success: false
+          });
+        }
+        const {id}= req.params;
+        const course =await Course.findById(id);
+        if(!course){
+            return res.send({
+                success: false,
+                message: "Course not found"
+            })
+        }
+     
+    return res.status(200).json({
+        success: true,
+        message: "Course found",
+        course,
+      });
     } catch (error) {
         console.error(error);
         res.status(500).json({
