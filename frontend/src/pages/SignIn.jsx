@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
+import { Bounce, ToastContainer, toast } from 'react-toastify';
 import axios from "axios"
 
 const SignIn = () => {
@@ -12,37 +13,48 @@ const SignIn = () => {
   const navigate = useNavigate()
 
   const dataRegister = async () => {
-    if(formData.email==='' || formData.password==='')
-    {
-      alert("Enter all details")
+    if (formData.email === "" || formData.password === "") {
+      toast.warn("Enter all details");
       return;
-        
     }
+  
     try {
-        const response = await axios.post(
-            `${import.meta.env.VITE_API_URL}/api/v1/signin`,
-            formData,
-            {
-                headers: { "Content-Type": "application/json" },
-            }
-          )
-      localStorage.setItem('token',response.data.token)
-      console.log(response.data)
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v1/signin`,
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+  
       if (response.data.success) {
-        alert(response.data.message)
-     
-            setTimeout(()=>{
-                if (response.data.role === "admin") {
-                    navigate(`/admin`)
-                  } else {
-                    navigate(`/home/${response.data.name}`)
-                  }
-            },250)
+        localStorage.setItem("token", response.data.token);
+        toast.success(response.data.message);
+  
+        setTimeout(() => {
+          if (response.data.role === "admin") {
+            navigate(`/admin`);
+          } else {
+            navigate(`/home/${response.data.name}`);
+          }
+        }, 3000);
+      } else {
+       
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("SignIn: ", error)
+     
+  
+      if (error.response) {
+    
+        toast.error(error.response.data.message || "Login failed!");
+      } else {
+      
+        toast.error("Unable to login. Please try again later.");
+      }
     }
-  }
+  };
+  
 
 
   const handleChange = (e) => {
@@ -58,6 +70,19 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-indigo-50 to-cyan-100 px-6">
+<ToastContainer
+position="top-right"
+autoClose={2000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+transition={Bounce}
+/>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

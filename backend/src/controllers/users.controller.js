@@ -46,6 +46,7 @@ export async function signUp(req,res){
             avatar: avatar.url,
             password: hashedPassword,
         })
+        const role = "user"
 if(role=="admin"){
     res.send({
         message: "admin signup",
@@ -130,20 +131,37 @@ const totalAdmin = await User.find({role: {$ne: "user"}})
 const courses = await Course.find();
 
   
-      if (user) {
+      if (user.role=="user") {
         return res.send({
 
             name: user.name,
             email: user.email,
             role: user.role,
             avatar: user.avatar,
-            totalUsers: totalUsers.length,
-            totalAdmin: totalAdmin.length,
-            courses: courses.length
+           
         });
       }
+      
+      else if(user.role=="admin"){
+       
+        return res.send({
+
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          avatar: user.avatar,
+          totalUsers: totalUsers.length,
+          totalAdmin: totalAdmin.length,
+          courses: courses.length
+         
+      
+      });
+
+      }
+      else{
   
       res.status(404).send({ message: "User not found", success: false });
+      }
   
     } catch (error) {
       console.error(error);
@@ -152,4 +170,56 @@ const courses = await Course.find();
         success: false
       });
     }
+}
+export async function getAllUsers(req, res) {
+  try {
+    const signedUser = req.user;
+    const user = await User.findById(signedUser.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found", success: false });
+    }
+
+    if (user.role === "admin") {
+      const allUsers = await User.find({ role: {$ne: "admin" } })
+        .select("-password") 
+        .lean();
+
+      return res.json({
+        success: true,
+        users: allUsers,
+      });
+    } else {
+      return res.status(403).json({
+        message: "Access denied. Only admins can view users.",
+        success: false,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+}
+
+export async function deleteUser(req,res){
+  try {
+    const signedUser= req.user;
+    const {id} = req.params;
+    const user = await User.findById(signedUser.id)
+    if(user.role=="admin"){
+     await User.findByIdAndDelete(id)
+      return res.send({
+       message: "user deleted"
+      })
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error",
+      success: false
+    });
+  }
 }

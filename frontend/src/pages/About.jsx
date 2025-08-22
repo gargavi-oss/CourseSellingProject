@@ -1,12 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Users, BookOpen, Target } from "lucide-react";
-import { HashLink } from "react-router-hash-link/dist/react-router-hash-link.cjs.development";
+import { HashLink } from "react-router-hash-link";
 
 const About = () => {
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-sky-50 via-indigo-100 to-purple-200 text-gray-900 overflow-hidden px-6 py-16">
-      {/* Heading */}
+      
       <motion.h1
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -16,7 +16,7 @@ const About = () => {
         About <span className="text-indigo-600">Us</span>
       </motion.h1>
 
-      {/* Subtext */}
+    
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -29,9 +29,8 @@ const About = () => {
         our courses are designed to inspire, challenge, and transform.
       </motion.p>
 
-      {/* Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-        {/* Mission */}
+     
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -46,7 +45,6 @@ const About = () => {
           </p>
         </motion.div>
 
-        {/* Vision */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}

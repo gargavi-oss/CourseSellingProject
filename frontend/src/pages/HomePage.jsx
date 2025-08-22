@@ -2,6 +2,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 const HomePage = () => {
   const [data, setData] = useState({});
@@ -48,7 +49,7 @@ const HomePage = () => {
         {},
         { headers: { token } }
       );
-      alert(response.data.message);
+      toast.success(response.data.message);
       fetchData();
     } catch (error) {
       console.log("error while adding course", error);
@@ -62,7 +63,7 @@ const HomePage = () => {
         `${import.meta.env.VITE_API_URL}/api/v1/deleteCourse/${id}`,
         { headers: { token } }
       );
-      alert(response.data.message);
+      toast.warn(response.data.message);
       fetchData();
     } catch (error) {
       console.log("error while deleting course", error);
@@ -79,6 +80,19 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-indigo-100 via-blue-50 to-green-50 p-6">
+      <ToastContainer
+position="top-right"
+autoClose={2000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+transition={Bounce}
+/>
     
       <header className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-indigo-700">

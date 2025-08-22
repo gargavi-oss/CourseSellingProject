@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signIn, signUp, user } from "../controllers/users.controller.js";
+import { deleteUser, getAllUsers, signIn, signUp, user } from "../controllers/users.controller.js";
 import { auth } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -11,5 +11,7 @@ router.post("/signup", upload.fields([{
     name: "avatar",
     maxCount: 1,
 }]),signUp)
+router.get("/getUsers",auth,getAllUsers)
+router.delete("/deleteUser/:id",auth,deleteUser)
 
 export default router

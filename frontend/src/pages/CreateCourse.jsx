@@ -1,7 +1,7 @@
-// CreateCourse.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
 
 const CreateCourse = ({ func }) => {
   const [formData, setFormData] = useState({

@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CourseInfo = () => {
-  const { id } = useParams(); // ✅ React way of getting route params
+  const { id } = useParams();
   const [courseInfo, setCourseInfo] = useState({});
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -42,6 +43,7 @@ const CourseInfo = () => {
   }
 
   return (
+    <>
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl mt-10">
       <img
         src={courseInfo.courseImage}
@@ -63,7 +65,12 @@ const CourseInfo = () => {
           ${courseInfo.price}
         </span>
       </div>
+   
     </div>
+    <div className="flex justify-center items-center mt-4">
+    <button className="bg-red-500 text-white  hover:bg-red-600 px-4 py-2 rounded-lg" onClick={()=>history.back()}>Back</button>
+    </div>
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import { Bounce, ToastContainer, toast } from 'react-toastify';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -19,43 +20,36 @@ const SignUp = () => {
       formData.name === "" ||
       formData.avatar === null
     ) {
-      alert("Enter all details")
+      toast.warn("Enter all details")
       return
     }
-  
     try {
-      const data = new FormData()
-      data.append("name", formData.name)
-      data.append("email", formData.email)
-      data.append("password", formData.password)
-      data.append("avatar", formData.avatar)
-  
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("password", formData.password);
+      data.append("avatar", formData.avatar);
+    
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/signup`,
         data,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      )
-  
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+    
       if (response.data.success) {
-        alert(response.data.message)
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          
-          avatar: null,
-        })
-        setTimeout(() => {
-          navigate("/signin") 
-        }, 500)
+        toast.success(response.data.message);
+        setFormData({ name: "", email: "", password: "", avatar: null });
+        setTimeout(() => navigate("/signin"), 500);
       } else {
-        alert(response.data.message)
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("SignUp: ", error)
+      console.error("SignUp error:", error);
+      toast.error(
+        error.response?.data?.message || "Unable to register. Try again!"
+      );
     }
+    
   }
   
   const handleChange = (e) => {
@@ -75,6 +69,19 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-indigo-50 to-cyan-100 px-6">
+      <ToastContainer
+position="top-right"
+autoClose={2000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+transition={Bounce}
+/>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

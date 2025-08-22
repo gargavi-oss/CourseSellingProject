@@ -2,12 +2,13 @@ import express from "express"
 import cors from "cors"
 import userRoutes from "./routes/users.routes.js"
 import courseRoutes from "./routes/courses.routes.js"
-
+import dotenv from "dotenv"
+dotenv.config();  
 const app = express()
 
 app.use(express.json())
 app.use(cors({
-    origin: "http://localhost:5173", 
+    origin: process.env.FRONTEND_DOMAIN, 
     credentials: true,    
   }));  
 
