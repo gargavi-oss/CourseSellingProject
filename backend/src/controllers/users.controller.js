@@ -2,6 +2,7 @@ import { User } from "../models/users.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { Course } from "../models/courses.model.js";
 
 export async function signUp(req,res){
     try {
@@ -126,6 +127,7 @@ export async function user(req, res) {
 
 const totalUsers = await User.find({ role: { $ne: "admin" } });
 const totalAdmin = await User.find({role: {$ne: "user"}})
+const courses = await Course.find();
 
   
       if (user) {
@@ -136,7 +138,8 @@ const totalAdmin = await User.find({role: {$ne: "user"}})
             role: user.role,
             avatar: user.avatar,
             totalUsers: totalUsers.length,
-            totalAdmin: totalAdmin.length
+            totalAdmin: totalAdmin.length,
+            courses: courses.length
         });
       }
   

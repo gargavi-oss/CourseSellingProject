@@ -7,7 +7,8 @@ import HomePage from './pages/HomePage'
 import AdminPage from './pages/AdminPage'
 import PrivateRoute from './PrivateRoute'
 import CourseInfo from './pages/CourseInfo'
-import Courses from './pages/Courses'
+
+import AdminCourses from './pages/AdminCourses'
 
 
 const App = () => {
@@ -18,7 +19,7 @@ const App = () => {
         <Route path='/home/:name' element={<PrivateRoute><HomePage/></PrivateRoute>} />
 <Route path='/admin' element={<PrivateRoute><AdminPage/></PrivateRoute>} />
 <Route path='/courseinfo/:id' element={<PrivateRoute><CourseInfo/></PrivateRoute>}/>
-<Route path='/admin/courses' element= {<PrivateRoute><Courses/></PrivateRoute>}/>
+<Route path='/admin/courses' element= {<PrivateRoute><AdminCourses/></PrivateRoute>}/>
         <Route path='/signup' element ={<SignUp/>}/>
         <Route path='/signin' element ={<SignIn/>}/>
       </Routes>
